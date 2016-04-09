@@ -2,32 +2,34 @@ package apngdetector
 
 import "bytes"
 
-//Image header
-var ihdr = [4]byte{'I', 'H', 'D', 'R'}
+const (
+	//Image header
+	ihdr = "IHDR"
 
-//First frame
-var idat = [4]byte{'I', 'D', 'A', 'T'}
+	//First frame
+	idat = "IDAT"
 
-//APNG header
-var actl = [4]byte{'a', 'c', 'T', 'L'}
+	//APNG header
+	actl = "acTL"
+)
 
 //check if an acTL follows between IHDR and first IDAT
 func Detect(img []byte) bool {
-	index := bytes.Index(img, ihdr[:])
+	index := bytes.Index(img, []byte(ihdr))
 	if index == -1 {
 		return false
 	}
 	//Cut head off
 	img = img[index:]
 
-	index = bytes.Index(img, idat[:])
+	index = bytes.Index(img, []byte(idat))
 	if index == -1 {
 		return false
 	}
 	//Cut tail off
 	img = img[:index]
 
-	index = bytes.Index(img, actl[:])
+	index = bytes.Index(img, []byte(actl))
 	//whether found the APNG header in the right location
 	return index != -1
 }
