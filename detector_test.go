@@ -1,7 +1,7 @@
 package apngdetector
 
 import (
-	"os"
+	"io/ioutil"
 	"testing"
 )
 
@@ -16,16 +16,11 @@ func TestDetector(t *testing.T) {
 		{"infinite2frame.png", true},
 	}
 	for _, test := range tests {
-		file, err := os.Open(test.filename)
+		file, err := ioutil.ReadFile(test.filename)
 		if err != nil {
 			panic(err)
 		}
-
-		isApng, err := Detect(file)
-		if err != nil {
-			panic(err)
-		}
-		if isApng != test.expected {
+		if Detect(file) != test.expected {
 			t.Fatal(test)
 		}
 	}
